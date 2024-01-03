@@ -13,7 +13,20 @@ class BinaryTreeNode {
    * incomplete node-- that is, the length of the shortest path from the root to
    * a node with less than two children. */
   minDepthToIncompleteNode() {
+    let depth = 1;
 
+    let toVisitQueue = [this];
+
+    while (toVisitQueue.length) {
+      let current = toVisitQueue.shift();
+
+      if (!current.left || !current.right)
+        return depth;
+
+      depth++;
+      toVisitQueue.push(this.left);
+      toVisitQueue.push(this.right);
+    }
   }
 
   /** maxDepth(): return the maximum depth from the invoking node -- that is,
@@ -24,7 +37,7 @@ class BinaryTreeNode {
 
   /** minDepth(): return the minimum depth from the invoking node -- that is,
    * the length of the shortest path from the invoking node to a leaf. */
-   minDepth() {
+  minDepth() {
 
   }
 
@@ -48,7 +61,7 @@ class BinaryTree {
   // this is a stack or recursion problem; we'll use recursion
 
   minDepthToIncompleteNode() {
-
+    return !this.root ? 0 : this.root.minDepthToIncompleteNode();
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
