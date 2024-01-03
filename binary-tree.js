@@ -32,8 +32,30 @@ class BinaryTreeNode {
   /** maxDepth(): return the maximum depth from the invoking node -- that is,
    * the length of the longest path from the invoking node to a leaf. */
   maxDepth() {
+    let biggestDepth = 0;
+    let depth = 1;
 
+    let toVisitStack = [this];
+
+    while (toVisitStack.length) {
+      let current = toVisitStack.pop();
+
+      if (!current.left && !current.right) {
+        if (depth > biggestDepth) {
+          biggestDepth = depth;
+          depth = 1;
+        } else {
+          break;
+        }
+      } else {
+        depth++;
+        toVisitStack.push(current.left);
+        toVisitStack.push(current.right);
+      }
+    }
+    return biggestDepth;
   }
+
 
   /** minDepth(): return the minimum depth from the invoking node -- that is,
    * the length of the shortest path from the invoking node to a leaf. */
@@ -70,7 +92,7 @@ class BinaryTree {
   // this is a stack or recursion problem; we'll use recursion
 
   maxDepth() {
-
+    return !this.root ? 0 : this.root.maxDepth();
   }
 
   /** minDepth(): return the minimum depth of the tree -- that is,
