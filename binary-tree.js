@@ -58,20 +58,16 @@ class BinaryTreeNode {
     const upperBound = Infinity;
 
     function _nextLarger(node, lowerBound, upperBound) {
+      if (node === null) return upperBound;
       if (node.val > lowerBound && node.val < upperBound) {
         upperBound = node.val;
       }
 
-      if (node.left && node.right) return Math.min(
+      return Math.min(
         _nextLarger(node.left, lowerBound, upperBound), 
         _nextLarger(node.right, lowerBound, upperBound));
-
-      if (!node.left && node.right) return _nextLarger(node.right, lowerBound, upperBound);
-      if (node.left && !node.right) return _nextLarger(node.left, lowerBound, upperBound);
-
-      return upperBound;
-
     }
+    
     const closest = _nextLarger(this, lowerBound, upperBound);
     return closest === Infinity ? null : closest;
   }
