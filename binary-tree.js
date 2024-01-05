@@ -32,42 +32,48 @@ class BinaryTreeNode {
   /** maxDepth(): return the maximum depth from the invoking node -- that is,
    * the length of the longest path from the invoking node to a leaf. */
   maxDepth() {
-    let biggestDepth = 0;
-    let depth = 1;
+    let leftMaxDepth = this.left ? this.left.maxDepth() : 0;
+    let rightMaxDepth = this.right ? this.right.maxDepth() : 0;
 
-    let toVisitStack = [this];
-
-    while (toVisitStack.length) {
-      let current = toVisitStack.pop();
-
-      if (!current.left && !current.right) {
-        if (depth > biggestDepth) {
-          biggestDepth = depth;
-          depth = 1;
-        } else {
-          break;
-        }
-      } else {
-        depth++;
-        toVisitStack.push(current.left);
-        toVisitStack.push(current.right);
-      }
-    }
-    return biggestDepth;
+    return Math.max(leftMaxDepth, rightMaxDepth) + 1;
   }
 
 
   /** minDepth(): return the minimum depth from the invoking node -- that is,
    * the length of the shortest path from the invoking node to a leaf. */
   minDepth() {
+    debugger;
+    if (!this.left && !this.right) return 1;
 
+    let leftMinDepth = this.left ? this.left.minDepth() : Infinity;
+    let rightMinDepth = this.right ? this.right.minDepth() : Infinity;
+
+    return Math.min(leftMinDepth, rightMinDepth) + 1;
   }
 
   /** nextLarger(lowerBound): return the smallest value from the invoking node
    * that is larger than lowerBound. Return null if no such value exists. */
 
   nextLarger(lowerBound) {
+    const upperBound = Infinity;
 
+    function _nextLarger(node, lowerBound, upperBound) {
+      if (node.val > lowerBound && node.val < upperBound) {
+        upperBound = node.val;
+      }
+
+      if (node.left && node.right) return Math.min(
+        _nextLarger(node.left, lowerBound, upperBound), 
+        _nextLarger(node.right, lowerBound, upperBound));
+
+      if (!node.left && node.right) return _nextLarger(node.right, lowerBound, upperBound);
+      if (node.left && !node.right) return _nextLarger(node.left, lowerBound, upperBound);
+
+      return upperBound;
+
+    }
+    const closest = _nextLarger(this, lowerBound, upperBound);
+    return closest === Infinity ? null : closest;
   }
 }
 
@@ -101,14 +107,14 @@ class BinaryTree {
   // this is a stack or recursion problem; we'll use recursion
 
   minDepth() {
-
+    return !this.root ? 0 : this.root.minDepth();
   }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
    * that is larger than lowerBound. Return null if no such value exists. */
 
   nextLarger(lowerBound) {
-
+    return !this.root ? null : this.root.nextLarger(lowerBound);
   }
 
   /** Further study!
